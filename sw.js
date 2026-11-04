@@ -1,5 +1,5 @@
 // TechHire Kerala service worker. Bump CACHE when you change index.html.
-const CACHE = 'techhire-v2';
+const CACHE = 'techhire-v5';
 const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -23,8 +23,10 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put('./index.html', copy));
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put('./index.html', copy));
+        }
         return res;
       }).catch(() => caches.match('./index.html'))
     );
